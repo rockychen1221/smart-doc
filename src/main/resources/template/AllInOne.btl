@@ -2,7 +2,7 @@
 # ${projectName}
 <%}%>
 <%if(isNotEmpty(revisionLogList)){%>
-Version |  Update Time  | Status | Author |  Description
+${i18n.versionHead}
 ------|--------|-----|------|-------
 <%
 for(revisionLog in revisionLogList){
@@ -21,30 +21,30 @@ for(api in apiDocList){
 for(doc in api.list){
 %>
 ### ${doc.desc}
-**URL:** ${doc.url}
+**${i18n.url}:** ${doc.url}
 
-**Type:** ${doc.type}
+**${i18n.type}:** ${doc.type}
 
 <%if(isNotEmpty(doc.author)){%>
-**Author:** ${doc.author}
+**${i18n.author}:** ${doc.author}
 <%}%>
 
-**Content-Type:** ${doc.contentType}
+**${i18n.contentType}:** ${doc.contentType}
 
-**Description:** ${doc.detail}
+**${i18n.description}:** ${doc.detail}
 <%if(isNotEmpty(doc.headers)){%>
 
-**Request-headers:**
+**${i18n.requestHeadersTitle}:**
 
-Header | Type|Description|Required|Since
+${i18n.requestHead}
 ---|---|---|---|----
 ${doc.headers}
 <%}%>
 <%if(isNotEmpty(doc.requestParams)){%>
 
-**Request-parameters:**
+**${i18n.requestParameters}:**
 
-Parameter | Type|Description|Required|Since
+{i18n.requestParametersHead}
 ---|---|---|---|---
 <%
 for(param in doc.requestParams){
@@ -54,15 +54,15 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 
 <%if(isNotEmpty(doc.requestUsage)){%>
-**Request-example:**
+**${i18n.requestExample}:**
 ```
 ${doc.requestUsage}
 ```
 <%}%>
 <%if(isNotEmpty(doc.responseParams)){%>
-**Response-fields:**
+**${i18n.responseFields}:**
 
-Field | Type|Description|Since
+${i18n.responseFieldsHead}
 ---|---|---|---
 <%
 for(param in doc.responseParams){
@@ -72,7 +72,7 @@ ${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
 
 <%if(isNotEmpty(doc.responseUsage)){%>
-**Response-example:**
+**${i18n.responseExample}:**
 ```
 ${doc.responseUsage}
 ```
@@ -81,8 +81,8 @@ ${doc.responseUsage}
 <% } %>
 <% } %>
 <%if(isNotEmpty(errorCodeList)){%>
-## ${errorListTitle}
-Error code |Description
+## ${i18n.errorListTitle}
+${i18n.errorListHead}
 ---|---
 <%
 for(error in errorCodeList){
@@ -92,13 +92,13 @@ ${error.value}|${error.desc}
 <%}%>
 
 <%if(isNotEmpty(dictList)){%>
-## ${dictListTitle}
+## ${i18n.dictListTitle}
 <%
 for(dict in dictList){
 %>
 ### ${dict.title}
 
-Code |Type|Description
+${i18n.dictListHead}
 ---|---|---
 <%
 for(dataDict in dict.dataDictList){

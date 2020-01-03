@@ -5,8 +5,6 @@ import com.power.doc.constants.DocGlobalConstants;
 import com.power.doc.constants.DocLanguage;
 import com.power.doc.constants.TemplateVariable;
 import com.power.doc.model.*;
-import com.power.doc.template.IDocBuildTemplate;
-import com.power.doc.template.SpringBootDocBuildTemplate;
 import com.power.doc.utils.BeetlTemplateUtil;
 import com.power.doc.utils.DocUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -59,19 +57,19 @@ public class DocBuilderTemplate {
     /**
      * get all api data
      *
-     * @param config ApiConfig
+     * @param config
      * @param javaProjectBuilder JavaProjectBuilder
-     * @return ApiAllData
+     * @return
      */
     public ApiAllData getApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         ApiAllData apiAllData = new ApiAllData();
         apiAllData.setProjectName(config.getProjectName());
         apiAllData.setProjectId(DocUtil.handleId(config.getProjectName()));
         apiAllData.setLanguage(config.getLanguage().getCode());
-        apiAllData.setApiDocList(listOfApiData(config, javaProjectBuilder));
+        apiAllData.setApiDocList(listOfApiData(config,javaProjectBuilder));
         apiAllData.setErrorCodeList(errorCodeDictToList(config));
         apiAllData.setRevisionLogs(config.getRevisionLogs());
-        apiAllData.setApiDocDictList(buildDictionary(config, javaProjectBuilder));
+        apiAllData.setApiDocDictList(buildDictionary(config,javaProjectBuilder));
         return apiAllData;
     }
 
@@ -103,11 +101,11 @@ public class DocBuilderTemplate {
     /**
      * Merge all api doc into one document
      *
-     * @param apiDocList         list  data of Api doc
-     * @param config             api config
+     * @param apiDocList     list  data of Api doc
+     * @param config         api config
      * @param javaProjectBuilder JavaProjectBuilder
-     * @param template           template
-     * @param outPutFileName     output file
+     * @param template       template
+     * @param outPutFileName output file
      */
     public void buildAllInOne(List<ApiDoc> apiDocList, ApiConfig config, JavaProjectBuilder javaProjectBuilder, String template, String outPutFileName) {
         String outPath = config.getOutPath();
@@ -127,19 +125,10 @@ public class DocBuilderTemplate {
         } else {
             tpl.binding(TemplateVariable.DICT_ORDER.getVariable(), apiDocList.size() + 2);
         }
-        if (null != config.getLanguage()) {
-            if (DocLanguage.CHINESE.code.equals(config.getLanguage().getCode())) {
-                tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
-                tpl.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
-            } else {
-                tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_EN_TITLE);
-                tpl.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_EN_TITLE);
-            }
-        } else {
-            tpl.binding(TemplateVariable.ERROR_LIST_TITLE.getVariable(), DocGlobalConstants.ERROR_CODE_LIST_CN_TITLE);
-            tpl.binding(TemplateVariable.DICT_LIST_TITLE.getVariable(), DocGlobalConstants.DICT_CN_TITLE);
-        }
-        List<ApiDocDict> apiDocDictList = buildDictionary(config, javaProjectBuilder);
+        //国际化
+        tpl.binding(TemplateVariable.I18N.getVariable(), I18n.newInstance(config.getLanguage()));
+
+        List<ApiDocDict> apiDocDictList = buildDictionary(config,javaProjectBuilder);
         tpl.binding(TemplateVariable.DICT_LIST.getVariable(), apiDocDictList);
         FileUtil.nioWriteFile(tpl.render(), outPath + FILE_SEPARATOR + outPutFileName);
     }
@@ -169,7 +158,7 @@ public class DocBuilderTemplate {
      */
     public void buildSingleControllerApi(String outPath, String controllerName, String template, String fileExtension) {
         FileUtil.mkdirs(outPath);
-        SourceBuilder sourceBuilder = new SourceBuilder(Boolean.TRUE, new JavaProjectBuilder());
+        SourceBuilder sourceBuilder = new SourceBuilder(Boolean.TRUE,new JavaProjectBuilder());
         ApiDoc doc = sourceBuilder.getSingleControllerApiData(controllerName);
         Template mapper = BeetlTemplateUtil.getByName(template);
         mapper.binding(TemplateVariable.DESC.getVariable(), doc.getDesc());
@@ -181,7 +170,7 @@ public class DocBuilderTemplate {
     /**
      * Build dictionary
      *
-     * @param config             api config
+     * @param config api config
      * @param javaProjectBuilder JavaProjectBuilder
      * @return list of ApiDocDict
      */
@@ -241,11 +230,11 @@ public class DocBuilderTemplate {
                         }
                         clzz = Class.forName(dictionary.getEnumClassName());
                     }
-                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz, dictionary.getCodeField(),
+                    List<ApiErrorCode> enumDictionaryList = EnumUtil.getEnumInformation(clzz,dictionary.getCodeField(),
                             dictionary.getDescField());
                     errorCodeList.addAll(enumDictionaryList);
                 }
-            } catch (ClassNotFoundException e) {
+            } catch ( ClassNotFoundException e) {
                 e.printStackTrace();
             }
             return errorCodeList;
@@ -255,8 +244,7 @@ public class DocBuilderTemplate {
     private List<ApiDoc> listOfApiData(ApiConfig config, JavaProjectBuilder javaProjectBuilder) {
         this.checkAndInitForGetApiData(config);
         config.setMd5EncryptedHtmlName(true);
-        ProjectDocConfigBuilder configBuilder = new ProjectDocConfigBuilder(config, javaProjectBuilder);
-        IDocBuildTemplate docBuildTemplate = new SpringBootDocBuildTemplate();
-        return docBuildTemplate.getApiData(configBuilder);
+        SourceBuilder sourceBuilder = new SourceBuilder(config,javaProjectBuilder);
+        return sourceBuilder.getControllerApiData();
     }
 }

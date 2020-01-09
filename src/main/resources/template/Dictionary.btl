@@ -1,11 +1,11 @@
 <%if(isNotEmpty(dictList)){%>
-# Data Dictionaries
+## ${i18n.dictListTitle}
 <%
 for(dict in dictList){
 %>
-## ${dict.title}
+### ${dict.title}
 
-Code |Type|Description
+${i18n.dictListHead}
 ---|---|---
 <%
 for(dataDict in dict.dataDictList){

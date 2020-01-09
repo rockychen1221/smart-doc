@@ -19,8 +19,12 @@ public enum TemplateVariable {
     DICT_LIST("dictList"),
     DICT_LIST_TITLE("dictListTitle"),
     DICT_ORDER("dictListOrder"),
-    VERSION("version");
+    VERSION("version"),
 
+    I18N("i18n"),
+    RESPONSE_FIELDS("responseFields"),
+    RESPONSE_FIELDS_HEADE("responseFieldsHeade"),
+    RESPONSE_EXAMPLE("responseExample");
 
     private String variable;
 

@@ -53,7 +53,7 @@ ${param.field}|${param.type}|${param.desc}|${param.required}|${param.version}
 <%}%>
 <%}%>
 
-<%if(isNotEmpty(doc.requestUsage)){%>
+<%if(isNotEmpty(i18n.requestExample)){%>
 **${i18n.requestExample}:**
 ```
 ${doc.requestUsage}
@@ -71,7 +71,7 @@ ${param.field}|${param.type}|${param.desc}|${param.version}
 <%}%>
 <%}%>
 
-<%if(isNotEmpty(doc.responseUsage)){%>
+<%if(isNotEmpty(i18n.responseExample)){%>
 **${i18n.responseExample}:**
 ```
 ${doc.responseUsage}
@@ -80,6 +80,7 @@ ${doc.responseUsage}
 
 <% } %>
 <% } %>
+
 <%if(isNotEmpty(errorCodeList)){%>
 ## ${i18n.errorListTitle}
 ${i18n.errorListHead}

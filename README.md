@@ -1,7 +1,8 @@
 <h1 align="center">Smart-Doc Project</h1>
 
-## Update
-添加模板国际化支持
+## Update 2019-01-09
+增加国际化，支持MD和HTML
+
 
 [中文文档](https://github.com/shalousun/smart-doc/blob/master/README_CN.md)
 

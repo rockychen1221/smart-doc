@@ -1,7 +1,6 @@
 
-# Error code list
-
-Error code |Description
+## ${i18n.errorListTitle}
+${i18n.errorListHead}
 ---|---
 <%
 for(error in list){
